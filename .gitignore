@@ -1,0 +1,7 @@
+# ignore environment
+.venv
+.venv/
+
+# ignore IDE
+.idea
+.idea/
