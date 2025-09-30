@@ -1,0 +1,26 @@
+# ignore environment
+.venv
+.venv/
+/.venv
+
+# ignore IDE
+.idea
+.idea/
+/.idea
+
+# ignore environments
+*.env
+
+# ignore logs
+*.logs
+
+# ignore python cache
+*.pyc
+__pycache__/
+__pycache__
+.cache
+.pytest_cache/
+
+# html allure report dir
+allureReport/
+/allureReport
