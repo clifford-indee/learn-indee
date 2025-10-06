@@ -13,14 +13,24 @@
 
 # ignore logs
 *.logs
+*.log
 
 # ignore python cache
 *.pyc
+.cache
 __pycache__/
 __pycache__
-.cache
+/__pycache__
+.pytest_cache
 .pytest_cache/
+/.pytest_cache
 
 # html allure report dir
 allureReport/
 /allureReport
+assets
+/assets
+assets/
+
+# html report
+testReport.html

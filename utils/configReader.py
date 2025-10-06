@@ -1,6 +1,8 @@
+import pathlib
 from configparser import ConfigParser
 
 def readConfig(section, option):
     config = ConfigParser()
-    config.read("configData.ini")
+    ini_path = pathlib.Path(__file__).parent / "configData.ini"
+    config.read(ini_path)
     return config.get(section, option)
