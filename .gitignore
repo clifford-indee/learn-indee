@@ -12,8 +12,10 @@
 *.env
 
 # ignore logs
-*.logs
+logs
 *.log
+logs/
+/logs
 
 # ignore python cache
 *.pyc
@@ -34,3 +36,4 @@ assets/
 
 # html report
 testReport.html
+*.html

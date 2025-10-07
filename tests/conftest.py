@@ -14,12 +14,13 @@ from webdriver_manager.microsoft import EdgeChromiumDriverManager
 
 # load the url from .env
 load_dotenv()
-url = os.getenv('ENTERPRISE_URL')
+url = os.getenv('ADMIN_URL')
 
 # parameterized fixture for browsers based on request
 @pytest.fixture(params=["chrome", "firefox"], scope="class")
 def get_browser(request):
     global browser
+    # global browserName
     if request.param == "chrome":
         browser = webdriver.Chrome(service=CHservice(ChromeDriverManager().install()))
     if request.param == "firefox":
@@ -29,6 +30,7 @@ def get_browser(request):
     request.cls.browser = browser
     browser.get(url)
     browser.maximize_window()
+    # browserName = browser.current_window_handle
     yield browser
     allure.attach(browser.get_screenshot_as_png(), name="lastLook.png", attachment_type=AttachmentType.PNG)
     browser.quit()
