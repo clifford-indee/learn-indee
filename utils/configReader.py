@@ -1,8 +1,16 @@
 import pathlib
 from configparser import ConfigParser
+from selenium.webdriver.common.by import By
 
-def readConfig(section, option):
+# reads the .ini file and returns the locator tuple
+def read_config(section, option: str):
     config = ConfigParser()
     ini_path = pathlib.Path(__file__).parent / "configData.ini"
     config.read(ini_path)
-    return config.get(section, option)
+    if option.endswith("_XPATH"):
+        return (By.XPATH, config.get(section, option))
+    elif option.endswith("_CSS"):
+        return (By.CSS_SELECTOR, config.get(section, option))
+    elif option.endswith("_ID"):
+        return (By.ID, config.get(section, option))
+    raise ValueError(f"Unknown option: {option}")
