@@ -12,7 +12,7 @@ class Logger():
 
         # log file
         self.LogFileName = '..\\logs\\log'+cur_time+'.txt'
-        file_handler = logging.FileHandler(self.LogFileName, mode='w')
+        file_handler = logging.FileHandler(self.LogFileName, mode='a')
         file_handler.setFormatter(formatter)
         file_handler.setLevel(file_level)
         self.logger.addHandler(file_handler)

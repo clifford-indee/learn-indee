@@ -1,6 +1,7 @@
 import os
 import pytest
 import allure
+import logging
 
 from dotenv import load_dotenv
 from allure_commons.types import AttachmentType
@@ -11,6 +12,10 @@ from selenium.webdriver.edge.service import Service as EDservice
 from webdriver_manager.chrome import ChromeDriverManager
 from webdriver_manager.firefox import GeckoDriverManager
 from webdriver_manager.microsoft import EdgeChromiumDriverManager
+from utils.logGenerator import Logger
+
+# set the current file and log level as INFO
+log = Logger(__name__, logging.INFO)
 
 # load the url from .env
 load_dotenv()
@@ -20,7 +25,6 @@ url = os.getenv('ADMIN_URL')
 @pytest.fixture(params=["chrome", "firefox"], scope="class")
 def get_browser(request):
     global browser
-    # global browserName
     if request.param == "chrome":
         browser = webdriver.Chrome(service=CHservice(ChromeDriverManager().install()))
     if request.param == "firefox":
@@ -30,7 +34,7 @@ def get_browser(request):
     request.cls.browser = browser
     browser.get(url)
     browser.maximize_window()
-    # browserName = browser.current_window_handle
+    log.logger.info("Loading browser {}".format(browser.current_window_handle))
     yield browser
     allure.attach(browser.get_screenshot_as_png(), name="lastLook.png", attachment_type=AttachmentType.PNG)
     browser.quit()
