@@ -1,13 +1,14 @@
-'''
+"""
 Author: Clifford @indee
 Test cases for SaaS login page.
-'''
+"""
 
-import os
-import pytest
 import logging
+import os
 
+import pytest
 from dotenv import load_dotenv
+
 from tests.pages.adminLoginPage import AdminLoginPage
 from tests.stepdefinitions.baseTest import BaseTest
 from utils.logGenerator import Logger
@@ -15,13 +16,15 @@ from utils.logGenerator import Logger
 # set the current file and log level as INFO
 log = Logger(__name__, logging.INFO)
 
-# class level
+
+# class level test
+@pytest.mark.skip(reason="Non BDD tests.")
 class TestAdminLogin(BaseTest):
 
     # load the credentials from the .env
     load_dotenv()
-    acc_name = os.getenv('ACC_THE')
-    acc_key = os.getenv('KEY_THE')
+    acc_name = os.getenv("ACC_THE")
+    acc_key = os.getenv("KEY_THE")
 
     # test to validate the page title
     def test_validate_login(self):

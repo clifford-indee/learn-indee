@@ -36,19 +36,11 @@ repos:
     -   id: python-check-blanket-noqa
 
 # Cleanup imports by reordering using static analysis.
--   repo: https://github.com/asottile/reorder_python_imports
-    rev: v3.12.0
-    hooks:
-    -   id: reorder-python-imports
-        exclude: settings/server.py
-        args: [
-            --py37-plus,
-            --application-directories=.
-        ]
+
 
 # Black is a PEP8 Python code formatter, and ran as a hook.
 -   repo: https://github.com/psf/black
-    rev: 24.1.0
+    rev: 25.9.0
     hooks:
     -   id: black
 
