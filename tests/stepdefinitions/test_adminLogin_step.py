@@ -11,29 +11,23 @@ from tests.pages.adminLoginPage import AdminLoginPage
 from tests.pages.nimad.nimad_email_page import NimadEmailPage
 
 load_dotenv()
-acc_name = os.getenv("ACC_THE")
-acc_key = os.getenv("KEY_THE")
-url = os.getenv("ENTERPRISE_URL")
-nimad_acc = os.getenv("NIMAD_ACC")
-nimad_key = os.getenv("NIMAD_KEY")
-nimad = os.getenv("ENTERPRISE_NIMAD")
 
 # Load the feature file
 scenarios("../features/adminLogin.feature")
 
 
-@given("I navigate to the login page")
-def navigate_to_login(get_browser):
-    AdminLoginPage(get_browser).open_saas_login(url)
+@given(parsers.parse("I navigate to the {login} page"))
+def navigate_to_login(get_browser, login):
+    AdminLoginPage(get_browser).open_saas_login(os.getenv(login))
 
 
 @when("I check the page title")
 def check_page_title(get_browser):
-    AdminLoginPage(get_browser).verify_login_page()
+    pass
 
 
-@then(parsers.parse("I should see the correct {valid_title}"))
-def verify_login_page(get_browser, valid_title):
+@then("I should see the correct title")
+def verify_login_page(get_browser):
     AdminLoginPage(get_browser).verify_login_page()
 
 
@@ -67,14 +61,14 @@ def check_signup(get_browser):
     AdminLoginPage(get_browser).verify_signup()
 
 
-@given("I open the nimad page")
-def open_nimad_page(get_browser):
-    NimadEmailPage.open_nimad_login(get_browser, nimad)
+@given(parsers.parse("I open the {nimad} page"))
+def open_nimad_page(get_browser, nimad):
+    NimadEmailPage.open_nimad_login(get_browser, os.getenv(nimad))
 
 
-@when(parsers.parse("I log into the {account} and {password}"))
-def nimad_login(get_browser, account, password):
-    NimadEmailPage.fill_login(get_browser, account, password)
+@when(parsers.parse("I log into the {acc} and {key}"))
+def nimad_login(get_browser, acc, key):
+    NimadEmailPage.fill_login(get_browser, os.getenv(acc), os.getenv(key))
     NimadEmailPage.verify_login(get_browser)
 
 
@@ -83,14 +77,14 @@ def navigate_to_email_list(get_browser):
     NimadEmailPage.open_emails(get_browser)
 
 
-@then(parsers.parse("I should see the {email} initiated"))
+@then(parsers.parse("I should see the {email} has been initiated"))
 def check_email_initiated(get_browser, email):
     NimadEmailPage.verify_email(get_browser, email)
 
 
-@when(parsers.parse("I fill the valid {email} and {password}"))
-def fill_login_credentials(get_browser, email, password):
-    AdminLoginPage(get_browser).fill_login(email, password)
+@when(parsers.parse("I fill the valid {email} and {key}"))
+def fill_login_credentials(get_browser, email, key):
+    AdminLoginPage(get_browser).fill_login(os.getenv(email), os.getenv(key))
 
 
 @when("I click on the login button")
