@@ -13,7 +13,7 @@ from tests.pages.nimad.nimad_email_page import NimadEmailPage
 load_dotenv()
 
 # Load the feature file
-scenarios("../features/adminLogin.feature")
+scenarios("adminLogin.feature")
 
 
 @given(parsers.parse("I navigate to the {login} page"))
@@ -22,7 +22,7 @@ def navigate_to_login(get_browser, login):
 
 
 @when("I check the page title")
-def check_page_title(get_browser):
+def check_page_title():
     pass
 
 
@@ -34,20 +34,18 @@ def verify_login_page(get_browser):
 @when("I click on the Sign up link")
 def click_on_signup(get_browser):
     AdminLoginPage(get_browser).click_sign_up()
-    AdminLoginPage(get_browser).verify_login_page()
+    AdminLoginPage(get_browser).verify_signup_page()
 
 
 @when(
     parsers.parse(
-        "I fill the fields {email} {pwd} {cnf_pwd}"
+        "I fill the fields {email} {pwd}"
         " {first_name} {last_name} {company} on SignUp Page"
     )
 )
-def signup_credentials(
-    get_browser, email, pwd, cnf_pwd, first_name, last_name, company
-):
+def signup_cred(get_browser, email, pwd, first_name, last_name, company):
     AdminLoginPage(get_browser).fill_signup(
-        email, pwd, cnf_pwd, first_name, last_name, company
+        email, pwd, pwd, first_name, last_name, company
     )
 
 
@@ -63,28 +61,32 @@ def check_signup(get_browser):
 
 @given(parsers.parse("I open the {nimad} page"))
 def open_nimad_page(get_browser, nimad):
-    NimadEmailPage.open_nimad_login(get_browser, os.getenv(nimad))
+    NimadEmailPage(get_browser).open_nimad_login(os.getenv(nimad))
 
 
 @when(parsers.parse("I log into the {acc} and {key}"))
 def nimad_login(get_browser, acc, key):
-    NimadEmailPage.fill_login(get_browser, os.getenv(acc), os.getenv(key))
-    NimadEmailPage.verify_login(get_browser)
+    NimadEmailPage(get_browser).fill_login(os.getenv(acc), os.getenv(key))
+    NimadEmailPage(get_browser).verify_login()
 
 
 @when("I navigate to the email list")
 def navigate_to_email_list(get_browser):
-    NimadEmailPage.open_emails(get_browser)
+    NimadEmailPage(get_browser).open_emails()
 
 
 @then(parsers.parse("I should see the {email} has been initiated"))
 def check_email_initiated(get_browser, email):
-    NimadEmailPage.verify_email(get_browser, email)
+    NimadEmailPage(get_browser).verify_email(email)
 
 
-@when(parsers.parse("I fill the valid {email} and {key}"))
-def fill_login_credentials(get_browser, email, key):
-    AdminLoginPage(get_browser).fill_login(os.getenv(email), os.getenv(key))
+@when(parsers.parse("I fill the valid {email} and {password}"))
+def fill_login_cred(get_browser, email, password):
+    if email.startswith("ACC_"):
+        email = os.getenv(email)
+    if password.startswith("KEY_"):
+        password = os.getenv(password)
+    AdminLoginPage(get_browser).fill_login(email, password)
 
 
 @when("I click on the login button")
@@ -93,7 +95,6 @@ def click_on_login_button(get_browser):
 
 
 @then("I should see an error message as failure")
-@then("I should see the main page")
 def check_login(get_browser):
     AdminLoginPage(get_browser).verify_login()
 
@@ -101,3 +102,8 @@ def check_login(get_browser):
 @when(parsers.parse("I fill the invalid {email} and {password}"))
 def invalid_login_credentials(get_browser, email, password):
     AdminLoginPage(get_browser).fill_login(email, password)
+
+
+@then(parsers.parse("I should see the main page and log out {email}"))
+def logout_after_login(get_browser, email):
+    AdminLoginPage(get_browser).log_out(email)

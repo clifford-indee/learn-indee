@@ -43,8 +43,8 @@ class AdminLoginPage(BasePage):
                     CReader.read_config("locators", "signUpText_XPATH")
                 )
             )
-        except Exception as e:
-            log.logger.error("Could not verify sign up page.", e)
+        except Exception:
+            log.logger.exception("Could not verify sign up page.")
 
     def fill_signup(self, email, pwd, cnf_pwd, first_name, last_name, company):
         log.logger.info("Checking visibility of the sign up elements.")
@@ -80,12 +80,12 @@ class AdminLoginPage(BasePage):
                 )
             )
             self.wait.until(
-                EC.visibility_of_element_located(
+                EC.element_to_be_clickable(
                     CReader.read_config("locators", "signUpCheckbox_XPATH")
                 )
             )
-        except Exception as e:
-            log.logger.error("Failed to fill sign up form.", e)
+        except Exception:
+            log.logger.exception("Failed to fill sign up form.")
         else:
             log.logger.info("Filled sign up form.")
             BasePage.key_type(self, "signUpEmail_XPATH", email)
@@ -109,13 +109,17 @@ class AdminLoginPage(BasePage):
                     CReader.read_config("locators", "signUpSuccess_XPATH")
                 )
             )
-        except Exception as e:
-            log.logger.error("Sign up not successful.", e)
+        except Exception:
+            log.logger.exception("Sign up not successful.")
+            assert False
 
     # verify the login page load
     def verify_login_page(self):
-        log.logger.info("Current page as {}".format(self.browser.title))
-        assert self.browser.title == LOGIN_TITLE, "Not login page."
+        try:
+            self.wait.until(EC.title_is(LOGIN_TITLE))
+            log.logger.info("Current page as {}".format(self.browser.title))
+        except Exception:
+            assert False, "Not login page."
 
     # fill the login credentials
     def fill_login(self, acc_name, acc_key):
@@ -132,8 +136,8 @@ class AdminLoginPage(BasePage):
                     CReader.read_config("locators", "password_XPATH")
                 )
             )
-        except Exception as e:
-            log.logger.error("Failed to fill login form", e)
+        except Exception:
+            log.logger.exception("Failed to fill login form")
         else:
             log.logger.info("Login page filled.")
             BasePage.key_type(self, "email_XPATH", acc_name)
@@ -148,12 +152,27 @@ class AdminLoginPage(BasePage):
     def verify_login(self):
         BasePage.wait_for_foldingcube(self)
         try:
-            self.shortWait.until(
+            self.wait.until(
                 EC.visibility_of_element_located(
                     CReader.read_config("locators", "loginFail_XPATH")
                 )
             )
-        except Exception as e:
-            log.logger.info("Successful login.", e)
+        except TimeoutError:
+            try:
+                self.shortWait.until(
+                    EC.visibility_of_element_located(
+                        CReader.read_config("locators", "accountDrop_XPATH")
+                    )
+                )
+            except Exception:
+                log.logger.exception("Invalid login did not fail.")
+            else:
+                log.logger.info("Login succeeded.")
         else:
-            assert False, "Login failed."
+            assert False, "Invalid login has failed as expected."
+
+    # log out of account
+    def log_out(self, email):
+        log.logger.info("Logging out of current account {}.".format(email))
+        BasePage.click(self, "accountDrop_XPATH")
+        BasePage.click(self, "logoutOpt_XPATH")
