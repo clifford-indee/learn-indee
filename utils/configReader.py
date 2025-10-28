@@ -9,8 +9,9 @@ def read_config(section, option: str, *args: str):
     config = ConfigParser()
     ini_path = pathlib.Path(__file__).parent / "configData.ini"
     config.read(ini_path)
+    suffix = args[0] if args else ""
     if option.endswith("_XPATH"):
-        return (By.XPATH, config.get(section, option) + args[0])
+        return (By.XPATH, config.get(section, option) + suffix)
     elif option.endswith("_CSS"):
         return (By.CSS_SELECTOR, config.get(section, option))
     elif option.endswith("_ID"):
