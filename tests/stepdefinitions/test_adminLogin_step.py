@@ -59,7 +59,7 @@ def check_signup(get_browser):
     AdminLoginPage(get_browser).verify_signup()
 
 
-@given(parsers.parse("I open the {nimad} page"))
+@given(parsers.parse("I open the nimad {nimad} page"))
 def open_nimad_page(get_browser, nimad):
     NimadEmailPage(get_browser).open_nimad_login(os.getenv(nimad))
 
