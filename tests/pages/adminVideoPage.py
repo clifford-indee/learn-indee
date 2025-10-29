@@ -40,7 +40,7 @@ class AdminVideoPage(BasePage):
                 EC.element_to_be_clickable(
                     CReader.read_config("locators", "planEleOverhead_XPATH")
                 )
-            )
+            ).click()
         except Exception:
             log.logger.info("New plan overhead is skipped.")
 
