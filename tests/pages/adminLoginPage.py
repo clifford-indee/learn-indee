@@ -105,7 +105,7 @@ class AdminLoginPage(BasePage):
         try:
             log.logger.info("Checking if sign up succeeded.")
             self.wait.until(
-                EC.visibility_of_element_located(
+                EC.presence_of_element_located(
                     CReader.read_config("locators", "signUpSuccess_XPATH")
                 )
             )

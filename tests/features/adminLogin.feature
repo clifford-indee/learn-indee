@@ -17,12 +17,12 @@ Covers the functionality of SaaS admin login
     And I click on the SignUp button
     Then I should see the success message
       Examples:
-        | LOGIN      | EMAIL               | PASSWORD  | FIRSTNAME | LASTNAME | COMPANYNAME |
-        | PUNIQA_URL | test_cliff@fake.com | Temp432!  | clifford  | temp     | fake        |
+        | LOGIN      | EMAIL               | PASSWORD    | FIRSTNAME | LASTNAME | COMPANYNAME |
+        | PUNIQA_URL | test_cliff@fake.com | Autorun432! | clifford  | temp     | fake        |
 
     # Use .env keys for NIMAD url, account and password
     Scenario Outline: T03: User verifies their new account through mail
-      Given I open the <NIMAD> page
+      Given I open the nimad <NIMAD> page
       When I log into the <ACCOUNT> and <PASSWORD>
       And I navigate to the email list
       Then I should see the <EMAIL> has been initiated
@@ -37,8 +37,9 @@ Covers the functionality of SaaS admin login
       And I click on the login button
       Then I should see the main page and log out <EMAIL>
       Examples:
-        | LOGIN      | EMAIL   | PASSWORD |
-        | PUNIQA_URL | ACC_PRE | KEY_PRE  |
+        | LOGIN      | EMAIL               | PASSWORD     |
+        | PUNIQA_URL | ACC_PRE             | KEY_PRE      |
+        | PUNIQA_URL | test_cliff@fake.com | Autorun432!  |
 
     @negative
     Scenario Outline: T05: Admin signs into the login page with invalid credentials
