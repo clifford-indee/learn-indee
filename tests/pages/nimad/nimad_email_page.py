@@ -25,7 +25,10 @@ class NimadEmailPage(BasePage):
 
     # Open the Nimad login
     def open_nimad_login(self, url):
-        self.browser.get(url)
+        try:
+            self.browser.get(url)
+        except Exception:
+            log.logger.exception("Website did not load.")
 
     # Fill login credentials
     def fill_login(self, account, password):
@@ -36,8 +39,8 @@ class NimadEmailPage(BasePage):
                     CReader.read_config("locators", "nimadAccount_XPATH")
                 )
             )
-        except Exception as e:
-            log.logger.error("Failed to fill the nimad login.", e)
+        except Exception:
+            log.logger.exception("Failed to fill the nimad login.")
         else:
             log.logger.info("Login filled successfully.")
             BasePage.key_type(self, "nimadAccount_XPATH", account)
@@ -47,6 +50,15 @@ class NimadEmailPage(BasePage):
     # Verify the nimad login
     def verify_login(self):
         log.logger.info("Verifying the nimad login.")
+        try:
+            self.wait.until(
+                EC.visibility_of_element_located(
+                    CReader.read_config("locators", "nimadLanding_XPATH")
+                )
+            )
+        except Exception:
+            pass
+        log.logger.info("Current page as {}".format(self.browser.title))
         assert self.browser.title == NIMAD_TITLE, "Nimad login failed."
 
     # Navigate to the email section
@@ -56,7 +68,7 @@ class NimadEmailPage(BasePage):
 
     """
     Verify the email sent.
-    The locator is defaulted to an unindexed row,
+    The locator is defaulted to an unindexed row
     so add the desired index as a string.
     Append as "[index]/locator"
     """
@@ -71,24 +83,69 @@ class NimadEmailPage(BasePage):
             ele = self.wait.until(
                 EC.visibility_of_element_located(locator)
             )  # noqa: E501
-            assert ele.text == email, "Email doesn't match."
-        except Exception as e:
-            log.logger.error("Failed to find the email locator.", e)
+        except Exception:
+            log.logger.exception("Failed to find the email locator.")
         else:
+            assert ele.text == email, "Email doesn't match."
             # flake8 is very rude.
             locator = CReader.read_config(
                 "locators", "nimadIDs_XPATH", "[1]/th/a"
             )  # noqa: E501
             self.wait.until(EC.element_to_be_clickable(locator)).click()
-            self.wait.until(
-                EC.element_to_be_clickable(
-                    CReader.read_config("locators", "nimadVerify_XPATH")
-                )
-            ).click()  # noqa: E501
             try:
                 locator = CReader.read_config(
-                    "locators", "nimadVerifyBtn_XPATH"
+                    "locators", "nimadVerify_XPATH"
                 )  # noqa: E501
-                self.wait.until(EC.element_to_be_clickable(locator))
-            except Exception as e:
-                log.logger.error("Failed to verify.", e)
+                self.wait.until(EC.element_to_be_clickable(locator)).click()
+            except Exception:
+                log.logger.exception("Failed to verify.")
+
+    #
+    def fail_email(self, email):
+        log.logger.info("Locating the fail attempt email in nimad.")
+        try:
+            locator = CReader.read_config(
+                "locators", "nimadEmails_XPATH", "[1]/td[2]"
+            )  # noqa: E501
+            ele = self.wait.until(
+                EC.visibility_of_element_located(locator)
+            )  # noqa: E501
+        except Exception:
+            log.logger.exception("Failed to find the email locator.")
+        else:
+            assert ele.text == email, "Email doesn't match."
+            locator = CReader.read_config(
+                "locators", "nimadIDs_XPATH", "[1]/th/a"
+            )  # noqa: E501
+            self.wait.until(EC.element_to_be_clickable(locator)).click()
+            ele = self.wait.until(
+                EC.visibility_of_element_located(
+                    CReader.read_config("locators", "nimadSubject_XPATH")
+                )
+            )
+            assert "Invalid login" in ele.text, "Fail subject is not valid."
+
+    #
+    def verify_video(self, email):
+        log.logger.info("Verifying the video in nimad.")
+        try:
+            locator = CReader.read_config(
+                "locators", "nimadEmails_XPATH", "[1]/td[2]"
+            )  # noqa: E501
+            ele = self.wait.until(
+                EC.visibility_of_element_located(locator)
+            )  # noqa: E501
+        except Exception:
+            log.logger.exception("Failed to find the email locator.")
+        else:
+            assert ele.text == email, "Email doesn't match."
+            locator = CReader.read_config(
+                "locators", "nimadIDs_XPATH", "[1]/th/a"
+            )  # noqa: E501
+            self.wait.until(EC.element_to_be_clickable(locator)).click()
+            ele = self.wait.until(
+                EC.visibility_of_element_located(
+                    CReader.read_config("locators", "nimadSubject_XPATH")
+                )
+            )
+            assert "Video" in ele.text, "Fail subject is not valid."
