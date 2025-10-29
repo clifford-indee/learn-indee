@@ -6,7 +6,9 @@ import pytest
 from allure_commons.types import AttachmentType
 from dotenv import load_dotenv
 from selenium import webdriver
+from selenium.common import NoAlertPresentException
 from selenium.webdriver.chrome.service import Service as CHservice
+from selenium.webdriver.common.alert import Alert
 from selenium.webdriver.edge.service import Service as EDservice
 from selenium.webdriver.firefox.service import Service as FFservice
 from webdriver_manager.chrome import ChromeDriverManager
@@ -95,6 +97,7 @@ def get_browser(request):
         options.add_argument("--no-sandbox")
         options.add_argument("--disable-gpu")
         options.add_argument("--enable-automation")
+        options.add_argument("--disable-notifications")
         service = CHservice(ChromeDriverManager().install())
         browser = webdriver.Chrome(service=service, options=options)
     elif browser_name == "firefox":
@@ -167,3 +170,17 @@ def pytest_bdd_after_scenario(request, feature, scenario):
         )
     except Exception:
         log.logger.exception("Screenshot error.")
+
+
+# fixture to handle alerts
+@pytest.fixture
+def alerts(get_browser):
+    yield
+    try:
+        alert = Alert(browser)
+        log.logger.info("Browser alert: " + alert.text)
+        alert.dismiss()
+    except NoAlertPresentException:
+        log.logger.info("No alert was raised..")
+    except Exception:
+        log.logger.exception("Unexpected exception occurred.")
