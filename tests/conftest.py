@@ -25,35 +25,6 @@ load_dotenv()
 url = os.getenv("ENTERPRISE_URL")
 
 
-"""
-# pytest parameterized fixture for browsers based on request
-@pytest.fixture(params=["chrome", "firefox"], scope="class", autouse=True)
-def get_browser(request):
-    global browser
-    if request.param == "chrome":
-        service = CHservice(ChromeDriverManager().install())
-        browser = webdriver.Chrome(service=service)
-    if request.param == "firefox":
-        service = FFservice(GeckoDriverManager().install())
-        browser = webdriver.Firefox(service=service)
-    if request.param == "edge":
-        browser = webdriver.Edge(
-            service=EDservice(EdgeChromiumDriverManager().install())
-        )
-    request.cls.browser = browser
-    # browser.get(url)
-    browser.maximize_window()
-    log.logger.info("Loading browser {}".format(browser.current_window_handle))
-    yield browser
-    allure.attach(
-        browser.get_screenshot_as_png(),
-        name="lastLook.png",
-        attachment_type=AttachmentType.PNG,
-    )
-    browser.quit()
-"""
-
-
 # custom command options for browser selection
 def pytest_addoption(parser):
     parser.addoption(
@@ -117,26 +88,10 @@ def get_browser(request):
     else:
         raise ValueError("Unsupported browser: {}".format(browser_name))
     yield browser
-    log.logger.info("Quit browser {}".format(browser.current_window_handle))
-    browser.quit()
-
-
-# browser fixture specific for chrome
-@pytest.fixture(scope="session")
-def chrome():
-    global browser
-    service = CHservice(ChromeDriverManager().install())
-    browser = webdriver.Chrome(service=service)
-    browser.maximize_window()
-    log.logger.info("Loading browser {}".format(browser.current_window_handle))
-    yield browser
-    allure.attach(
-        browser.get_screenshot_as_png(),
-        name="lastLook.png",
-        attachment_type=AttachmentType.PNG,
-    )
-    log.logger.info("Quit browser {}".format(browser.current_window_handle))
-    browser.quit()
+    for window_handle in browser.window_handles:
+        browser.switch_to.window(window_handle)
+        log.logger.info("Quit browser {}".format(window_handle))
+        browser.quit()
 
 
 # hook that generates failure report
