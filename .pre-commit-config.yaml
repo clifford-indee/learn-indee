@@ -1,0 +1,67 @@
+# See https://pre-commit.com for more information
+# See https://pre-commit.com/hooks.html for more hooks
+repos:
+-   repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.5.0
+    hooks:
+        # Trim trailing whitespaces
+    -   id: trailing-whitespace
+        # Check for valid python file parse
+    -   id: check-ast
+        # Files end in a newline
+    -   id: end-of-file-fixer
+        # Loads all yaml to verify syntax
+    -   id: check-yaml
+        # Avoid 1024kb large files
+    -   id: check-added-large-files
+        args: ['--maxkb=1024']
+        # Check for merge conflict strings
+    -   id: check-merge-conflict
+        # Loads all toml to verify syntax
+    -   id: check-toml
+        # Loads all xml to verify syntax
+    -   id: check-xml
+        # Check for private keys
+    -   id: detect-private-key
+        # Loads all json to verify syntax
+    -   id: check-json
+        # Protects the branch master
+    -   id: no-commit-to-branch
+        args: ['--branch', 'master', '--branch', 'main']
+
+# Collection of pre-commit hooks that runs using grep pattern search.
+-   repo: https://github.com/pre-commit/pygrep-hooks
+    rev: v1.10.0 # As of 2022/11/21 the latest
+    hooks:
+    -   id: python-check-blanket-noqa
+
+# (Incompatible with black) Cleanup imports by reordering using static analysis.
+#-   repo: https://github.com/asottile/reorder_python_imports
+#    rev: v3.16.0
+#    hooks:
+#    -   id: reorder-python-imports
+#        exclude: settings/server.py
+#        args: [
+#            --py37-plus,
+#            --application-directories=.
+#        ]
+
+# Black is a PEP8 Python code formatter, and ran as a hook.
+-   repo: https://github.com/psf/black
+    rev: 25.9.0
+    hooks:
+    -   id: black
+
+# Indee devs don't know how to use f-strings so cleanup after them (find and replace).
+-   repo: https://github.com/dannysepler/rm_unneeded_f_str
+    rev: v0.2.0
+    hooks:
+    -   id: rm-unneeded-f-str
+
+# PyFlake code linting tool for checking style, syntax and logical errors.
+-   repo: https://github.com/pycqa/flake8
+    rev: 7.0.0
+    hooks:
+    - id: flake8
+      exclude: scripts/
+      additional_dependencies: [flake8-print]
