@@ -28,22 +28,16 @@ class BasePage:
     # clicking on an element
     def click(self, locator):
         log.logger.info("Clicking on element:{}".format(locator))
-        try:
-            # not so friendly flake8
-            locate = CReader.read_config("locators", locator)
-            self.wait.until(EC.element_to_be_clickable(locate)).click()
-        except Exception:
-            log.logger.exception("Click failed.")
+        # not so friendly flake8
+        locate = CReader.read_config("locators", locator)
+        self.wait.until(EC.element_to_be_clickable(locate)).click()
 
     # entering keyboard values
     def key_type(self, locator, text):
         log.logger.info("Key type on element:{} text:{}".format(locator, text))
-        try:
-            # not so friendly flake8
-            locate = CReader.read_config("locators", locator)
-            self.wait.until(EC.element_to_be_clickable(locate)).send_keys(text)
-        except Exception:
-            log.logger.exception("Type failed.")
+        # not so friendly flake8
+        locate = CReader.read_config("locators", locator)
+        self.wait.until(EC.element_to_be_clickable(locate)).send_keys(text)
 
     # wait for page loading cube
     def wait_for_foldingcube(self):
@@ -76,12 +70,9 @@ class BasePage:
     def slider(self, locator, offset):
         log.logger.info("Slider move element:{}".format(locator))
         action = ActionChains(self.browser)
-        try:
-            locate = CReader.read_config("locators", locator)
-            ele = self.wait.until(EC.visibility_of_element_located(locate))
-            action.drag_and_drop_by_offset(ele, offset, 0).perform()
-        except Exception:
-            log.logger.exception("Slider failed.")
+        locate = CReader.read_config("locators", locator)
+        ele = self.wait.until(EC.visibility_of_element_located(locate))
+        action.drag_and_drop_by_offset(ele, offset, 0).perform()
 
     # wait for page loading bar
     def wait_for_loadbar(self):

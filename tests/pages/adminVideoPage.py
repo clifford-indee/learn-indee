@@ -22,7 +22,7 @@ class AdminVideoPage(BasePage):
         self.longWait = WebDriverWait(self.browser, LONG_WAIT)
         self.shortWait = WebDriverWait(self.browser, SHORT_WAIT)
 
-    #
+    # verify the video page loaded
     def verify_video_page(self):
         BasePage.wait_for_foldingcube(self)
         BasePage.wait_for_loadbar(self)
@@ -36,29 +36,23 @@ class AdminVideoPage(BasePage):
             pass
         log.logger.info("Current page as {}".format(self.browser.title))
         assert VIDEO_TITLE in self.browser.title, "Not videos page."
-        try:
-            self.wait.until(
-                EC.element_to_be_clickable(
-                    CReader.read_config("locators", "planEleOverhead_XPATH")
-                )
-            ).click()
-        except Exception:
-            log.logger.info("New plan overhead is skipped.")
+        self.wait.until(
+            EC.element_to_be_clickable(
+                CReader.read_config("locators", "planEleOverhead_XPATH")
+            )
+        ).click()
 
-    #
+    # use the sidebar to move to videos page
     def navigate_video_page(self):
         BasePage.wait_for_foldingcube(self)
         log.logger.info("Navigate to video tab.")
-        try:
-            self.wait.until(
-                EC.visibility_of_element_located(
-                    CReader.read_config("locators", "videoTab_XPATH")
-                )
-            ).click()
-        except Exception:
-            log.logger.exception("Failed to navigate to videos tab.")
+        self.wait.until(
+            EC.visibility_of_element_located(
+                CReader.read_config("locators", "videoTab_XPATH")
+            )
+        ).click()
 
-    #
+    # if no video exists, add a new video
     def click_on_new_video(self):
         try:
             log.logger.info("Click on new video.")
@@ -77,60 +71,56 @@ class AdminVideoPage(BasePage):
             except Exception:
                 log.logger.exception("Failed to click on new video.")
 
-    #
+    # fill the video details
     def fill_video_form(
         self, name, video, roughcut: bool, internalnotes, hi_res, subtitle
     ):
         log.logger.info("Filling video form.")
-        try:
-            self.wait.until(
-                EC.visibility_of_element_located(
-                    CReader.read_config("locators", "videoName_XPATH")
-                )
-            ).send_keys(name)
-            video_ele = self.wait.until(
-                EC.presence_of_element_located(
-                    CReader.read_config("locators", "videoUpload_XPATH")
-                )
+        self.wait.until(
+            EC.visibility_of_element_located(
+                CReader.read_config("locators", "videoName_XPATH")
             )
-            ele = self.wait.until(
-                EC.presence_of_element_located(
-                    CReader.read_config("locators", "videoRoughCut_XPATH")
-                )
+        ).send_keys(name)
+        video_ele = self.wait.until(
+            EC.presence_of_element_located(
+                CReader.read_config("locators", "videoUpload_XPATH")
             )
-            self.wait.until(
-                EC.visibility_of_element_located(
-                    CReader.read_config("locators", "videoIntNotes_XPATH")
-                )
-            ).send_keys(internalnotes)
-            self.wait.until(
-                EC.presence_of_element_located(
-                    CReader.read_config("locators", "videoHiRes_XPATH")
-                )
+        )
+        ele = self.wait.until(
+            EC.presence_of_element_located(
+                CReader.read_config("locators", "videoRoughCut_XPATH")
             )
-            self.wait.until(
-                EC.presence_of_element_located(
-                    CReader.read_config("locators", "videoSub_XPATH")
-                )
+        )
+        self.wait.until(
+            EC.visibility_of_element_located(
+                CReader.read_config("locators", "videoIntNotes_XPATH")
             )
-        except Exception:
-            log.logger.exception("Failed to fill video form.")
-        else:
-            base = Path(__file__).parent.parent.parent / "sample" / video
-            video_ele.send_keys(str(base))
-            if roughcut:
-                self.browser.execute_script(
-                    "arguments[0].scrollIntoView({block: 'center'});", ele
-                )
-                self.browser.execute_script("arguments[0].click();", ele)
-            log.logger.info("Successfully filled video form.")
+        ).send_keys(internalnotes)
+        self.wait.until(
+            EC.presence_of_element_located(
+                CReader.read_config("locators", "videoHiRes_XPATH")
+            )
+        )
+        self.wait.until(
+            EC.presence_of_element_located(
+                CReader.read_config("locators", "videoSub_XPATH")
+            )
+        )
+        base = Path(__file__).parent.parent.parent / "sample" / video
+        video_ele.send_keys(str(base))
+        if roughcut:
+            self.browser.execute_script(
+                "arguments[0].scrollIntoView({block: 'center'});", ele
+            )
+            self.browser.execute_script("arguments[0].click();", ele)
+        log.logger.info("Successfully filled video form.")
 
-    #
+    # click the upload video button
     def click_upload(self):
         log.logger.info("Click on video upload button.")
         BasePage.click(self, "videoUploadBtn_XPATH")
 
-    #
+    # verify if the upload is successful
     def verify_upload(self):
         BasePage.wait_for_foldingcube(self)
         log.logger.info("Verifying video upload success.")
@@ -144,45 +134,37 @@ class AdminVideoPage(BasePage):
             log.logger.exception("Failed to upload video.")
             assert False, "Failed to upload video."
 
-    #
+    # fill the watermark details after video details
     def fill_watermark(self, opacity):
         BasePage.wait_for_foldingcube(self)
         log.logger.info("Filling watermark.")
-        try:
-            self.wait.until(
-                EC.presence_of_element_located(
-                    CReader.read_config("locators", "watermarkGrid_XPATH")
-                )
+        self.wait.until(
+            EC.presence_of_element_located(
+                CReader.read_config("locators", "watermarkGrid_XPATH")
             )
-            self.wait.until(
-                EC.visibility_of_element_located(
-                    CReader.read_config("locators", "watermarkSlide_XPATH")
-                )
+        )
+        self.wait.until(
+            EC.visibility_of_element_located(
+                CReader.read_config("locators", "watermarkSlide_XPATH")
             )
-            loc = CReader.read_config("locators", "WatermarkFreqAlways_XPATH")
-            self.wait.until(EC.visibility_of_element_located(loc))
-        except Exception:
-            log.logger.exception("Failed to fill watermark.")
-        else:
-            BasePage.slider(self, "watermarkGrid_XPATH", int(opacity) - 60)
-            log.logger.info("Successfully filled watermark.")
+        )
+        loc = CReader.read_config("locators", "WatermarkFreqAlways_XPATH")
+        self.wait.until(EC.visibility_of_element_located(loc))
+        BasePage.slider(self, "watermarkGrid_XPATH", int(opacity) - 60)
+        log.logger.info("Successfully filled watermark.")
 
-    #
+    # click the save video buttton
     def click_save(self):
         log.logger.info("Click on video save button.")
         BasePage.click(self, "videoSaveBtn_XPATH")
 
-    #
+    # verify completion of video upload
     def upload_complete(self, video: str):
         BasePage.wait_for_foldingcube(self)
         log.logger.info("Verifying upload.")
-        try:
-            ele = self.wait.until(
-                EC.visibility_of_element_located(
-                    CReader.read_config("locators", "firstVideo_XPATH")
-                )
+        ele = self.wait.until(
+            EC.visibility_of_element_located(
+                CReader.read_config("locators", "firstVideo_XPATH")
             )
-        except Exception:
-            log.logger.exception("Failed to find video.")
-        else:
-            assert ele.text == video, "Failed to upload video."
+        )
+        assert ele.text == video, "Failed to upload video."

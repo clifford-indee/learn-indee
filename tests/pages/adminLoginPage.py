@@ -36,65 +36,58 @@ class AdminLoginPage(BasePage):
     # verify sign up page
     def verify_signup_page(self):
         BasePage.wait_for_foldingcube(self)
-        try:
-            log.logger.info("Verifying sign up page.")
-            self.wait.until(
-                EC.visibility_of_element_located(
-                    CReader.read_config("locators", "signUpText_XPATH")
-                )
+        log.logger.info("Verifying sign up page.")
+        self.wait.until(
+            EC.visibility_of_element_located(
+                CReader.read_config("locators", "signUpText_XPATH")
             )
-        except Exception:
-            log.logger.exception("Could not verify sign up page.")
+        )
 
     def fill_signup(self, email, pwd, cnf_pwd, first_name, last_name, company):
         log.logger.info("Checking visibility of the sign up elements.")
-        try:
-            self.wait.until(
-                EC.visibility_of_element_located(
-                    CReader.read_config("locators", "signUpEmail_XPATH")
-                )
+        self.wait.until(
+            EC.visibility_of_element_located(
+                CReader.read_config("locators", "signUpEmail_XPATH")
             )
-            self.wait.until(
-                EC.visibility_of_element_located(
-                    CReader.read_config("locators", "signUpPwd_XPATH")
-                )
+        )
+        self.wait.until(
+            EC.visibility_of_element_located(
+                CReader.read_config("locators", "signUpPwd_XPATH")
             )
-            self.wait.until(
-                EC.visibility_of_element_located(
-                    CReader.read_config("locators", "signUpCnfPwd_XPATH")
-                )
+        )
+        self.wait.until(
+            EC.visibility_of_element_located(
+                CReader.read_config("locators", "signUpCnfPwd_XPATH")
             )
-            self.wait.until(
-                EC.visibility_of_element_located(
-                    CReader.read_config("locators", "signUpFName_XPATH")
-                )
+        )
+        self.wait.until(
+            EC.visibility_of_element_located(
+                CReader.read_config("locators", "signUpFName_XPATH")
             )
-            self.wait.until(
-                EC.visibility_of_element_located(
-                    CReader.read_config("locators", "signUpLName_XPATH")
-                )
+        )
+        self.wait.until(
+            EC.visibility_of_element_located(
+                CReader.read_config("locators", "signUpLName_XPATH")
             )
-            self.wait.until(
-                EC.visibility_of_element_located(
-                    CReader.read_config("locators", "signUpCompany_XPATH")
-                )
+        )
+        self.wait.until(
+            EC.visibility_of_element_located(
+                CReader.read_config("locators", "signUpCompany_XPATH")
             )
-            self.wait.until(
-                EC.element_to_be_clickable(
-                    CReader.read_config("locators", "signUpCheckbox_XPATH")
-                )
+        )
+        self.wait.until(
+            EC.element_to_be_clickable(
+                CReader.read_config("locators", "signUpCheckbox_XPATH")
             )
-        except Exception:
-            log.logger.exception("Failed to fill sign up form.")
-        else:
-            log.logger.info("Filled sign up form.")
-            BasePage.key_type(self, "signUpEmail_XPATH", email)
-            BasePage.key_type(self, "signUpPwd_XPATH", pwd)
-            BasePage.key_type(self, "signUpCnfPwd_XPATH", cnf_pwd)
-            BasePage.key_type(self, "signUpFName_XPATH", first_name)
-            BasePage.key_type(self, "signUpLName_XPATH", last_name)
-            BasePage.key_type(self, "signUpCompany_XPATH", company)
-            BasePage.click(self, "signUpCheckbox_XPATH")
+        )
+        log.logger.info("Filled sign up form.")
+        BasePage.key_type(self, "signUpEmail_XPATH", email)
+        BasePage.key_type(self, "signUpPwd_XPATH", pwd)
+        BasePage.key_type(self, "signUpCnfPwd_XPATH", cnf_pwd)
+        BasePage.key_type(self, "signUpFName_XPATH", first_name)
+        BasePage.key_type(self, "signUpLName_XPATH", last_name)
+        BasePage.key_type(self, "signUpCompany_XPATH", company)
+        BasePage.click(self, "signUpCheckbox_XPATH")
 
     def click_signup_btn(self):
         log.logger.info("Clicking sign up button.")
@@ -111,7 +104,7 @@ class AdminLoginPage(BasePage):
             )
         except Exception:
             log.logger.exception("Sign up not successful.")
-            assert False
+            assert False, "Sign up not successful."
 
     # verify the login page load
     def verify_login_page(self):
@@ -124,24 +117,20 @@ class AdminLoginPage(BasePage):
     # fill the login credentials
     def fill_login(self, acc_name, acc_key):
         BasePage.wait_for_foldingcube(self)
-        try:
-            log.logger.info("Checking visibility of login page elements.")
-            self.wait.until(
-                EC.visibility_of_element_located(
-                    CReader.read_config("locators", "email_XPATH")
-                )
+        log.logger.info("Checking visibility of login page elements.")
+        self.wait.until(
+            EC.visibility_of_element_located(
+                CReader.read_config("locators", "email_XPATH")
             )
-            self.wait.until(
-                EC.visibility_of_element_located(
-                    CReader.read_config("locators", "password_XPATH")
-                )
+        )
+        self.wait.until(
+            EC.visibility_of_element_located(
+                CReader.read_config("locators", "password_XPATH")
             )
-        except Exception:
-            log.logger.exception("Failed to fill login form")
-        else:
-            log.logger.info("Login page filled.")
-            BasePage.key_type(self, "email_XPATH", acc_name)
-            BasePage.key_type(self, "password_XPATH", acc_key)
+        )
+        log.logger.info("Login page filled.")
+        BasePage.key_type(self, "email_XPATH", acc_name)
+        BasePage.key_type(self, "password_XPATH", acc_key)
 
     # click the login button
     def click_login_btn(self):

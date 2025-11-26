@@ -20,90 +20,75 @@ class AdminSubscriptionPage(BasePage):
         self.longWait = WebDriverWait(self.browser, LONG_WAIT)
         self.shortWait = WebDriverWait(self.browser, SHORT_WAIT)
 
-    #
+    # verify the subscription page
     def verify_sub_page(self):
         BasePage.wait_for_foldingcube(self)
         page_title = self.browser.title
         log.logger.info("Current page as {}".format(page_title))
         assert SUBSCRIPTION_TITLE in page_title, "Not subscription page."
 
-    #
+    # use the sidebar to move to subscription page
     def navigate_sub_page(self):
         log.logger.info("Navigate to subscription tab")
         BasePage.wait_for_foldingcube(self)
-        try:
-            self.wait.until(
-                EC.visibility_of_element_located(
-                    CReader.read_config("locators", "plansTab_XPATH")
-                )
-            ).click()
-        except Exception:
-            log.logger.exception("Failed to navigate to subscription tab.")
+        self.wait.until(
+            EC.visibility_of_element_located(
+                CReader.read_config("locators", "plansTab_XPATH")
+            )
+        ).click()
 
-    #
+    # choose the premium plan/button
     def click_premium(self):
-        try:
-            log.logger.info("Click premium plan.")
-            self.wait.until(
-                EC.element_to_be_clickable(
-                    CReader.read_config("locators", "premiumBtn_XPATH")
-                )
-            ).click()
-        except Exception:
-            log.logger.exception("Failed to click premium plan.")
+        log.logger.info("Click premium plan.")
+        self.wait.until(
+            EC.element_to_be_clickable(
+                CReader.read_config("locators", "premiumBtn_XPATH")
+            )
+        ).click()
 
-    #
+    # choose the high security plan/button
     def click_high_security(self):
-        try:
-            log.logger.info("Click high security plan.")
-            self.wait.until(
-                EC.element_to_be_clickable(
-                    CReader.read_config("locators", "highSecBtn_XPATH")
-                )
-            ).click()
-        except Exception:
-            log.logger.exception("Failed to click high security plan.")
+        log.logger.info("Click high security plan.")
+        self.wait.until(
+            EC.element_to_be_clickable(
+                CReader.read_config("locators", "highSecBtn_XPATH")
+            )
+        ).click()
 
-    #
+    # choose the theatrical plan/button
     def click_theatrical(self):
-        try:
-            log.logger.info("Click theatrical plan.")
-            self.wait.until(
-                EC.element_to_be_clickable(
-                    CReader.read_config("locators", "theatricalBtn_XPATH")
-                )
-            ).click()
-        except Exception:
-            log.logger.exception("Failed to click theatrical plan.")
+        log.logger.info("Click theatrical plan.")
+        self.wait.until(
+            EC.element_to_be_clickable(
+                CReader.read_config("locators", "theatricalBtn_XPATH")
+            )
+        ).click()
 
-    #
+    # choose the free trail plan/buttton
     def click_trial(self):
-        try:
-            log.logger.info("Click trial plan.")
-            self.wait.until(
-                EC.element_to_be_clickable(
-                    CReader.read_config("locators", "trialBtn_XPATH")
-                )
-            ).click()
-        except Exception:
-            log.logger.exception("Failed to click trial plan.")
+        log.logger.info("Click trial plan.")
+        self.wait.until(
+            EC.element_to_be_clickable(
+                CReader.read_config("locators", "trialBtn_XPATH")
+            )
+        ).click()
 
-    #
+    # confirm the plan button
     def click_confirm_pre(self):
         log.logger.info("Click confirm premium plan.")
         BasePage.click(self, "premiumConfirm_XPATH")
 
-    #
+    # confirm the plan button
     def click_confirm_high(self):
         log.logger.info("Click confirm high security plan.")
         BasePage.click(self, "premiumConfirm_XPATH")
 
-    #
+    # confirm the plan button
     def click_confirm_the(self):
         log.logger.info("Click confirm theatrical plan.")
         BasePage.click(self, "premiumConfirm_XPATH")
 
-    #
+    # verify the plan choosen
     def confirm_plan(self):
         try:
             log.logger.info("Confirming the chosen plan.")

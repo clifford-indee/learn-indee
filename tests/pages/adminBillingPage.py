@@ -21,26 +21,23 @@ class AdminBillingPage(BasePage):
         self.longWait = WebDriverWait(self.browser, LONG_WAIT)
         self.shortWait = WebDriverWait(self.browser, SHORT_WAIT)
 
-    #
+    # verify the title of the page loaded (not UI)
     def verify_billing_page(self):
         log.logger.info("Current page as {}".format(self.browser.title))
         assert BILLING_TITLE in self.browser.title, "Not billing page."
 
-    #
+    # redirect to the billing by interacting
     def redirect_to_billing(self):
         curr_window = self.browser.current_window_handle
         BasePage.click(self, "accountDrop_XPATH")
         BasePage.click(self, "billingOpt_XPATH")
-        try:
-            self.wait.until(EC.number_of_windows_to_be(2))
-            for window_handle in self.browser.window_handles:
-                if window_handle != curr_window:
-                    self.browser.switch_to.window(window_handle)
-                    break
-        except Exception:
-            log.logger.exception("Failed to redirect to billing page.")
+        self.wait.until(EC.number_of_windows_to_be(2))
+        for window_handle in self.browser.window_handles:
+            if window_handle != curr_window:
+                self.browser.switch_to.window(window_handle)
+                break
 
-    #
+    # fill the billing details on the page
     def fill_bill(
         self,
         firstname,
@@ -55,67 +52,58 @@ class AdminBillingPage(BasePage):
         postal,
     ):
         log.logger.info("Checking visibility of the sign up elements.")
-        try:
-            self.wait.until(
-                EC.visibility_of_element_located(
-                    CReader.read_config("locators", "billFName_XPATH")
-                )
-            ).clear()
-            self.wait.until(
-                EC.visibility_of_element_located(
-                    CReader.read_config("locators", "billLName_XPATH")
-                )
-            ).clear()
-            self.wait.until(
-                EC.visibility_of_element_located(
-                    CReader.read_config("locators", "billCardNum_XPATH")
-                )
-            ).send_keys(cardnumber)
-            self.wait.until(
-                EC.visibility_of_element_located(
-                    CReader.read_config("locators", "billCVV_XPATH")
-                )
-            ).send_keys(cvv)
-            self.wait.until(
-                EC.visibility_of_element_located(
-                    CReader.read_config("locators", "billStreet_XPATH")
-                )
-            ).clear()
-            loc = "billCountySelect_XPATH"
-            countryDrop = Select(
-                self.wait.until(
-                    EC.visibility_of_element_located(
-                        CReader.read_config("locators", loc)
-                    )
-                )
+        self.wait.until(
+            EC.visibility_of_element_located(
+                CReader.read_config("locators", "billFName_XPATH")
             )
-            countryDrop.select_by_visible_text(country)
-            self.wait.until(
-                EC.visibility_of_element_located(
-                    CReader.read_config("locators", "billCity_XPATH")
-                )
-            ).clear()
-            self.wait.until(
-                EC.visibility_of_element_located(
-                    CReader.read_config("locators", "billPostal_XPATH")
-                )
-            ).clear()
-        except Exception:
-            log.logger.exception("Failed to fill billing form.")
-        else:
-            BasePage.key_type(self, "billFName_XPATH", firstname)
-            BasePage.key_type(self, "billLName_XPATH", lastname)
-            BasePage.key_type(self, "billStreet_XPATH", street)
-            BasePage.key_type(self, "billCity_XPATH", city)
-            BasePage.key_type(self, "billPostal_XPATH", postal)
-            log.logger.info("Filled billing form.")
+        ).clear()
+        self.wait.until(
+            EC.visibility_of_element_located(
+                CReader.read_config("locators", "billLName_XPATH")
+            )
+        ).clear()
+        self.wait.until(
+            EC.visibility_of_element_located(
+                CReader.read_config("locators", "billCardNum_XPATH")
+            )
+        ).send_keys(cardnumber)
+        self.wait.until(
+            EC.visibility_of_element_located(
+                CReader.read_config("locators", "billCVV_XPATH")
+            )
+        ).send_keys(cvv)
+        self.wait.until(
+            EC.visibility_of_element_located(
+                CReader.read_config("locators", "billStreet_XPATH")
+            )
+        ).clear()
+        # why do we use flake8
+        loc = CReader.read_config("locators", "billCountySelect_XPATH")
+        ctyDrp = Select(self.wait.until(EC.visibility_of_element_located(loc)))
+        ctyDrp.select_by_visible_text(country)
+        self.wait.until(
+            EC.visibility_of_element_located(
+                CReader.read_config("locators", "billCity_XPATH")
+            )
+        ).clear()
+        self.wait.until(
+            EC.visibility_of_element_located(
+                CReader.read_config("locators", "billPostal_XPATH")
+            )
+        ).clear()
+        BasePage.key_type(self, "billFName_XPATH", firstname)
+        BasePage.key_type(self, "billLName_XPATH", lastname)
+        BasePage.key_type(self, "billStreet_XPATH", street)
+        BasePage.key_type(self, "billCity_XPATH", city)
+        BasePage.key_type(self, "billPostal_XPATH", postal)
+        log.logger.info("Filled billing form.")
 
-    #
+    # click the confirm bill button after successful filling
     def click_confirm_bill(self):
         log.logger.info("Clicking the confirm button.")
         BasePage.click(self, "billConfirmBtn_XPATH")
 
-    #
+    # verify the success of the billing details and change windows
     def bill_success(self):
         other_window = None
         status = True

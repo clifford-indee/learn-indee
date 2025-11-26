@@ -100,6 +100,7 @@ def pytest_runtest_makereport(item, call):
     outcome = yield
     rep = outcome.get_result()
     if rep.when == "call" and rep.failed:
+        log.logger.exception(f"Failure: {rep.longreprtext}.")
         try:
             allure.attach(
                 browser.get_screenshot_as_png(),
