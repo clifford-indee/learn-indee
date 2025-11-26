@@ -20,9 +20,9 @@ Feature: SaaS Admin creates a new Screener room and sends it
     And I click to submit login
     Then I should see landing project page
     Examples:
-      | LOGIN      | EMAIL               | PASSWORD    |
-      | PUNIQA_URL | test_cliff@fake.com | Autorun432! |
-      #| PUNIQA_URL | ACC_PRE             | KEY_PRE     | sample account
+      | LOGIN      | EMAIL    | PASSWORD  |
+      | PUNIQA_URL | ACC_TEST | KEY_TEST  |
+      #| PUNIQA_URL | ACC_PRE  | KEY_PRE   | sample account
 
   # Use .env for NIMAD url, account and password
   @T14
@@ -55,7 +55,7 @@ Feature: SaaS Admin creates a new Screener room and sends it
     When I search the screener room list for <RECIPIENT:s>
     Then I should see result screener room
     Examples:
-      | RECIPIENT:s |
+      | RECIPIENT:s      |
       | clifford@indee.tv|
 
   Scenario Outline: T17: User receives the screener email

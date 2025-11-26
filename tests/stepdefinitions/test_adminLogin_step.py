@@ -44,6 +44,10 @@ def click_on_signup(get_browser):
     )
 )
 def signup_cred(get_browser, email, pwd, first_name, last_name, company):
+    if email.startswith("ACC_"):
+        email = os.getenv(email)
+    if pwd.startswith("KEY_"):
+        pwd = os.getenv(pwd)
     AdminLoginPage(get_browser).fill_signup(
         email, pwd, pwd, first_name, last_name, company
     )

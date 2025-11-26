@@ -8,8 +8,8 @@ Feature: SaaS Admin creates new project titles and it's respective content
     And I submit the login form
     Then I should see the main page
     Examples:
-      | LOGIN      | EMAIL               | PASSWORD    |
-      | PUNIQA_URL | test_cliff@fake.com | Autorun432! |
+      | LOGIN      | EMAIL    | PASSWORD  |
+      | PUNIQA_URL | ACC_TEST | KEY_TEST  |
 
 
   @T07
