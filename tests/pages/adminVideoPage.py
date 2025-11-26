@@ -24,13 +24,14 @@ class AdminVideoPage(BasePage):
 
     #
     def verify_video_page(self):
+        BasePage.wait_for_foldingcube(self)
+        BasePage.wait_for_loadbar(self)
         try:
             self.wait.until(
                 EC.visibility_of_element_located(
                     CReader.read_config("locators", "addVideoText_XPATH")
                 )
             )
-            BasePage.wait_for_foldingcube(self)
         except Exception:
             pass
         log.logger.info("Current page as {}".format(self.browser.title))

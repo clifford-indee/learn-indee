@@ -128,6 +128,7 @@ class AdminProjectsPage(BasePage):
 
     #
     def verify_sub_page(self):
+        BasePage.wait_for_loadbar(self)
         BasePage.wait_for_foldingcube(self)
         try:
             self.wait.until(

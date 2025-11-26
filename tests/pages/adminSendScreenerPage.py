@@ -106,7 +106,7 @@ class AdminScreenerPage(BasePage):
     def transcoding(self):
         BasePage.wait_for_foldingcube(self)
         try:
-            self.wait.until(
+            self.longWait.until(
                 EC.invisibility_of_element(
                     CReader.read_config("locators", "transcoding_XPATH")
                 )

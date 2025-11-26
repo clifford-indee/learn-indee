@@ -45,7 +45,7 @@ class BasePage:
         except Exception:
             log.logger.exception("Type failed.")
 
-    # wait for page loading
+    # wait for page loading cube
     def wait_for_foldingcube(self):
         log.logger.info("Waiting for the folding cube.")
         try:
@@ -82,3 +82,15 @@ class BasePage:
             action.drag_and_drop_by_offset(ele, offset, 0).perform()
         except Exception:
             log.logger.exception("Slider failed.")
+
+    # wait for page loading bar
+    def wait_for_loadbar(self):
+        log.logger.info("Waiting for the loading bar.")
+        try:
+            self.wait.until(
+                EC.invisibility_of_element_located(
+                    CReader.read_config("locators", "progressBar_XPATH")
+                )
+            )
+        except Exception:
+            log.logger.exception("Loading failed")
